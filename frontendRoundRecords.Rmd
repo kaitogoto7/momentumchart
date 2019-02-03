@@ -1,0 +1,158 @@
+---
+title: "frontend"
+output: html_document
+---
+
+```{r}
+nations <- c("England", "France", "Ireland", "Italy", "Scotland", "Wales")
+```
+
+```{r}
+win.record.round <- function(nation, round){
+  filename <- paste0("./data/", nation, ".csv")
+  result.vector.old.to.new <- read.csv(filename)[,-c(1)]
+  result.matrix.old.to.new <- matrix(result.vector.old.to.new, ncol = 5, byrow = TRUE)[,round] #round on each column, year on each row with oldest at top (ie row 1)
+  
+  result.vector.old.to.new <- as.vector(result.matrix.old.to.new)
+  win.record <- sum(result.vector.old.to.new == "won")/length(result.vector.old.to.new)
+  
+  return(win.record)
+}
+
+win.record.round("England", 1)
+```
+
+TEST CASE: uncomment the print comment in the function to check win/loss matrix
+
+```{r}
+library(plotly)
+
+trace1 <- list(
+  x = nations, 
+  y = c(win.record.round("England", 1), win.record.round("France", 1), win.record.round("Ireland", 1), win.record.round("Italy", 1), win.record.round("Scotland", 1), win.record.round("Wales", 1)), #each of the nations' win record when they lose round 1 from England to Wales
+  marker = list(
+    #color = "gray", 
+    line = list(color = "transparent")
+  ), 
+  showlegend = FALSE, 
+  type = "bar", 
+  xaxis = "x", 
+  yaxis = "y"
+)
+
+
+
+trace2 <- list(
+  x = nations, 
+  y = c(win.record.round("England", 2), win.record.round("France", 2), win.record.round("Ireland", 2), win.record.round("Italy", 2), win.record.round("Scotland", 2), win.record.round("Wales", 2)), 
+  marker = list(
+    #color = "darkorange", 
+    line = list(color = "transparent")
+  ), 
+  showlegend = FALSE, 
+  type = "bar", 
+  xaxis = "x", 
+  yaxis = "y"
+)
+
+
+
+trace3 <- list(
+  x = nations, 
+  y = c(win.record.round("England", 3), win.record.round("France", 3), win.record.round("Ireland", 3), win.record.round("Italy", 3), win.record.round("Scotland", 3), win.record.round("Wales", 3)), 
+  marker = list(
+    #color = "gray", 
+    line = list(color = "transparent")
+  ), 
+  showlegend = FALSE, 
+  type = "bar", 
+  xaxis = "x", 
+  yaxis = "y"
+)
+
+
+
+trace4 <- list(
+  x = nations, 
+  y = c(win.record.round("England", 4), win.record.round("France", 4), win.record.round("Ireland", 4), win.record.round("Italy", 4), win.record.round("Scotland", 4), win.record.round("Wales", 4)),
+  marker = list(
+    #color = "darkorange", 
+    line = list(color = "transparent")
+  ), 
+  showlegend = FALSE, 
+  type = "bar", 
+  xaxis = "x", 
+  yaxis = "y"
+)
+
+trace5 <- list(
+  x = nations, 
+  y = c(win.record.round("England", 5), win.record.round("France", 5), win.record.round("Ireland", 5), win.record.round("Italy", 5), win.record.round("Scotland", 5), win.record.round("Wales", 5)), 
+  marker = list(
+    #color = "gray", 
+    line = list(color = "transparent")
+  ), 
+  showlegend = FALSE, 
+  type = "bar", 
+  xaxis = "x", 
+  yaxis = "y"
+)
+
+
+
+data <- list(trace1, trace2, trace3, trace4, trace5)
+layout <- list(
+  autosize = FALSE, 
+  barmode = "group", 
+  height = 500, 
+  hovermode = "closest", 
+  margin = list(
+    r = 50, 
+    t = 100, 
+    b = 100, 
+    l = 50, 
+    pad = 4
+  ), 
+  showlegend = FALSE, 
+  title = list(text = "6N WIN RECORD FOR EACH ROUND"), 
+  width = 750, 
+  xaxis = list(
+    autorange = TRUE, 
+    categoryarraysrc = "kaitogoto7:6:a73fad", 
+    categoryorder = "array", 
+    domain = c(0, 1), 
+    range = c(-0.5, 3.5), 
+    title = list(text = ""), 
+    type = "category"
+  ), 
+  yaxis = list(
+    autorange = TRUE, 
+    domain = c(0, 1), 
+    range = c(-3.02222222222, 15.4222222222), 
+    title = list(text = ""), 
+    type = "linear"
+  )
+)
+
+
+
+p <- plot_ly()
+
+p <- add_trace(p, x=trace1$x, y=trace1$y, hoverinfo=trace1$hoverinfo, marker=trace1$marker, name=trace1$name, showlegend=trace1$showlegend, type=trace1$type, xaxis=trace1$xaxis, yaxis=trace1$yaxis)
+
+p <- add_trace(p, x=trace2$x, y=trace2$y, hoverinfo=trace2$hoverinfo, marker=trace2$marker, name=trace2$name, showlegend=trace2$showlegend, type=trace2$type, xaxis=trace2$xaxis, yaxis=trace2$yaxis)
+
+p <- add_trace(p, x=trace3$x, y=trace3$y, hoverinfo=trace3$hoverinfo, marker=trace3$marker, name=trace3$name, showlegend=trace3$showlegend, type=trace3$type, xaxis=trace3$xaxis, yaxis=trace3$yaxis)
+
+p <- add_trace(p, x=trace4$x, y=trace4$y, hoverinfo=trace4$hoverinfo, marker=trace4$marker, name=trace4$name, showlegend=trace4$showlegend, type=trace4$type, xaxis=trace4$xaxis, yaxis=trace4$yaxis)
+
+p <- add_trace(p, x=trace5$x, y=trace5$y, hoverinfo=trace5$hoverinfo, marker=trace5$marker, name=trace5$name, showlegend=trace5$showlegend, type=trace5$type, xaxis=trace5$xaxis, yaxis=trace5$yaxis)
+
+p <- layout(p, autosize=layout$autosize, barmode=layout$barmode, height=layout$height, hovermode=layout$hovermode, margin=layout$margin, showlegend=layout$showlegend, width=layout$width, xaxis=layout$xaxis, yaxis=layout$yaxis)
+
+p
+
+Sys.setenv("plotly_username"="kaitogoto7")
+Sys.setenv("plotly_api_key"="")
+api_create(p, filename = "Six Nations Round Records")
+```

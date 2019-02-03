@@ -1,0 +1,43 @@
+---
+title: "margin and win% for HT and FT"
+output: html_document
+---
+
+GOAL:
+Extract Half Time and Full Time scores
+
+```{r}
+#store the links to all pages required
+
+england <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=1;template=results;trophy=2;type=team;view=results"
+
+france <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=9;template=results;trophy=2;type=team;view=results"
+
+ireland <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=3;template=results;trophy=2;type=team;view=results"
+
+italy <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=20;template=results;trophy=2;type=team;view=results"
+
+scotland <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=2;template=results;trophy=2;type=team;view=results"
+
+wales <- "http://stats.espnscrum.com/statsguru/rugby/stats/index.html?class=1;filter=advanced;orderby=date;size=200;spanmax1=31+Dec+2018;spanmin1=1+Jan+2000;spanval1=span;team=4;template=results;trophy=2;type=team;view=results"
+```
+
+
+
+```{r}
+library(rvest)
+
+extract.result.cells.from.webpage <- function(link, nation){
+  html.vector <- readLines(link)
+  html.lines <- regmatches(html.vector, regexpr("<td class=[[:punct:]]left[[:punct:]]>[[:lower:]]{3,5}</td>", html.vector))
+  html.lines.trimmed <- substr(html.lines, 18, nchar(html.lines)-5)
+  write.csv(html.lines.trimmed, paste0("./data/", nation, ".csv"))
+}
+
+links <- c(england, france, ireland, italy, scotland, wales)
+nations <- c("England", "France", "Ireland", "Italy", "Scotland", "Wales")
+
+for(i in 1:6){#6 Nations so hard codable
+  extract.result.cells.from.webpage(links[i], nations[i])
+}
+```
